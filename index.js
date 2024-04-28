@@ -26,21 +26,27 @@ const client = new MongoClient(uri, {
   async function run() {
     try {
       await client.connect();
-      const coffeesDB = await client.db("CraftGlowDB").collection("Items");
+      const CraftGlowDB = await client.db("CraftGlowDB").collection("Items");
       app.post("/added", async (req, res) => {
-        const result = await coffeesDB.insertOne(req.body);
+        const result = await CraftGlowDB.insertOne(req.body);
         res.send(result);
       });
       app.get("/added", async (req, res) => {
-        const result = await coffeesDB.find().toArray();
+        const result = await CraftGlowDB.find().toArray();
         res.send(result);
       });
       app.get("/added/:email", async (req, res) => {
-        const email = req.params.email;
-        const query = { email: email };
-        const result = await coffeesDB.find(query).toArray();
+        const result = await CraftGlowDB.find({ email: req.params.email }).toArray();
         res.send(result);
       });
+      app.get("/:id", async (req, res) => {
+      const id = req.params.id;
+      console.log(id);
+      const query = { _id: new ObjectId(id) };
+      const result = await CraftGlowDB.findOne(query);
+      res.send(result);
+      console.log(result);
+    });
       await client.db("admin").command({ ping: 1 });
       console.log(
         "Pinged your deployment. You successfully connected to MongoDB!"
