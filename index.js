@@ -53,6 +53,13 @@ const client = new MongoClient(uri, {
       const result = await CraftGlowDB.deleteOne(query);
       res.send(result);
     });
+    app.patch('/added/:id', async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const result = await CraftGlowDB.updateOne(filter, { $set: req.body },options);
+      res.send(result);
+    })
       await client.db("admin").command({ ping: 1 });
       console.log(
         "Pinged your deployment. You successfully connected to MongoDB!"
