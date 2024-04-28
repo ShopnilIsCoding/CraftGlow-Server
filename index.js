@@ -47,6 +47,12 @@ const client = new MongoClient(uri, {
       res.send(result);
       console.log(result);
     });
+    app.delete("/delete/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await CraftGlowDB.deleteOne(query);
+      res.send(result);
+    });
       await client.db("admin").command({ ping: 1 });
       console.log(
         "Pinged your deployment. You successfully connected to MongoDB!"
