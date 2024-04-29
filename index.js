@@ -27,6 +27,7 @@ const client = new MongoClient(uri, {
     try {
       await client.connect();
       const CraftGlowDB = await client.db("CraftGlowDB").collection("Items");
+      const AnotherDB = await client.db("CraftGlowDB").collection("Categories");
       app.post("/added", async (req, res) => {
         const result = await CraftGlowDB.insertOne(req.body);
         res.send(result);
@@ -39,7 +40,7 @@ const client = new MongoClient(uri, {
         const result = await CraftGlowDB.find({ email: req.params.email }).toArray();
         res.send(result);
       });
-      app.get("/:id", async (req, res) => {
+      app.get("/details/:id", async (req, res) => {
       const id = req.params.id;
       console.log(id);
       const query = { _id: new ObjectId(id) };
@@ -60,6 +61,10 @@ const client = new MongoClient(uri, {
       const result = await CraftGlowDB.updateOne(filter, { $set: req.body },options);
       res.send(result);
     })
+    app.get("/item/categories", async (req, res) => {
+      const result = await AnotherDB.find().toArray();
+      res.send(result);
+    });
       await client.db("admin").command({ ping: 1 });
       console.log(
         "Pinged your deployment. You successfully connected to MongoDB!"
