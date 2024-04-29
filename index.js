@@ -65,6 +65,12 @@ const client = new MongoClient(uri, {
       const result = await AnotherDB.find().toArray();
       res.send(result);
     });
+    app.get("/item/categories/:subcategory", async (req, res) => {
+      const subcategory=req.params.subcategory;
+      const query={category:subcategory}
+      const result=await CraftGlowDB.find(query).toArray();
+      res.send(result);
+    })
       await client.db("admin").command({ ping: 1 });
       console.log(
         "Pinged your deployment. You successfully connected to MongoDB!"
